@@ -10,6 +10,7 @@ The philosophy of use is to be deployed as part of a github action. The github a
 with provided pointers to the tavern test files (commonly named in the pattern of: `test_*.tavern.yaml`) and the OpenAPI
 specification (commonly named: `swagger.yaml`). The output format supports json, yaml, and csv. (TODO)
 
+TODO need to better describe how the workflow works!
 
 Some resources:
 

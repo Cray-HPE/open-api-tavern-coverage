@@ -21,13 +21,13 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
+
 import logging
 import os
 import yaml
 import regex
 import json
 import re
-import csv
 import sys
 
 from urllib.parse import urlparse
@@ -37,7 +37,7 @@ OPEN_API_FILE = "example_data/swagger_v2.yaml"
 TAVERN_FILE_DIR = "example_data/functional"
 TAVERN_FILES = []
 TAVERN_REGEX = "test_.*.tavern.yaml"
-API_TARGET_URLS = []  # ["{hsm_base_url}"]  # use this to specify variables you care about!
+API_TARGET_URLS = []  # ["{hsm_base_url}"]  # use this to specify variables you care about! This is the literal variable IN the tavern file
 
 
 def CreateJobSummaryTemplateValues(report):
@@ -187,18 +187,13 @@ if __name__ == '__main__':
         final_endpoints[endpoint] = data
 
     # create a final report
-    # todo might want to group this by url, else use the final report
+    # flatten this into a list of tuples
 
     report = []
     for url, data in final_endpoints.items():
         for method, count in data["counts"].items():
             report.append((url, method, count))
 
-    # with open('analysis_file.csv', 'w') as out:
-    #     csv_out = csv.writer(out)
-    #     csv_out.writerow(['url', 'method', 'count'])
-    #     for row in report:
-    #         csv_out.writerow(row)
 
     if not os.path.exists("data/output"):
         os.makedirs("data/output")

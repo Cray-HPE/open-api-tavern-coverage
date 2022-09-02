@@ -28,6 +28,21 @@ on:
         type: string
         required: false
         default: ubuntu-latest
+      open-api-file:
+        description: Registry to publish container images to
+        type: string
+        default: "api/swagger.yaml"
+        required: true
+      tavern-file-dir:
+        description: relative path of tavern files
+        type: string
+        default: "test/ct/functional"
+        required: true
+      api-target-urls:
+        description: comma separated list of urls to consider when parsing tavern files
+        type: string
+        default: "{hsm_base_url}"
+        required: true
 jobs:
   run_coverage:
 
@@ -42,9 +57,7 @@ jobs:
 
       - name: Run Open-API Tavern Coverage Tool
         shell: bash
-        run: docker run -e GITHUB_TOKEN -e DRYRUN=false -v "$(realpath output):/src/app/output" artifactory.algol60.net/csm-docker/unstable/open-api-tavern-coverage:0.1.0
-        env:
-          GITHUB_TOKEN: ${{ steps.get-token.outputs.token }}
+        run: docker run -v "$(realpath output):/src/app/output" -e TAVERN_FILE_DIR=${{ inputs.tavern-file-dir }} -e OPEN_API_FILE=${{ inputs.open-api-file }} -e API_TARGET_URLS=${{ inputs.api-target-urls }} artifactory.algol60.net/csm-docker/stable/open-api-tavern-coverage:0.1.0
 
       - name: Render template
         id: template

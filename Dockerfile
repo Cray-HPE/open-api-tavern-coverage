@@ -30,19 +30,21 @@ STOPSIGNAL SIGTERM
 RUN set -ex \
     && apk -U upgrade \
     && apk add --no-cache \
-        python3
+        python3 \
+        bash \
+        py3-pip
 #    python3-dev \
 #        libffi-dev \
-#        py3-pip \
+#        \
 #        bash \
 #        tar \
 #        build-base \
 #        git
 
 
-#COPY requirements.txt .
-#RUN pip3 install --upgrade pip
-#RUN pip3 install -r requirements.txt
+COPY requirements.txt .
+RUN pip3 install --upgrade pip
+RUN pip3 install -r requirements.txt
 
 FROM builder as installer
 

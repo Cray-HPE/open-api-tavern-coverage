@@ -42,7 +42,7 @@ jobs:
 
       - name: Run Open-API Tavern Coverage Tool
         shell: bash
-        run: docker run -e GITHUB_TOKEN -e DRYRUN=false -v "$(realpath output):/output" artifactory.algol60.net/csm-docker/unstable/open-api-tavern-coverage:0.1.0
+        run: docker run -e GITHUB_TOKEN -e DRYRUN=false -v "$(realpath output):/src/app/output" artifactory.algol60.net/csm-docker/unstable/open-api-tavern-coverage:0.1.0
         env:
           GITHUB_TOKEN: ${{ steps.get-token.outputs.token }}
 

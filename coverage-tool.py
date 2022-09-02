@@ -204,10 +204,12 @@ if __name__ == '__main__':
     #         csv_out.writerow(row)
 
 
-    if os.path.exists("output"):
-        logging.info("Generating job summary template values")
-        template_values = CreateJobSummaryTemplateValues(report)
-        with open("output/job_summary_template_values.yaml", "w") as f:
-            yaml.dump(template_values, f)
+    if os.path.exists("output") == False:
+        os.makedirs("output")
+
+    logging.info("Generating job summary template values")
+    template_values = CreateJobSummaryTemplateValues(report)
+    with open("output/job_summary_template_values.yaml", "w") as f:
+        yaml.dump(template_values, f)
 
     logging.info(json.dumps(final_endpoints, indent=2))

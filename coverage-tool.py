@@ -37,7 +37,7 @@ OPEN_API_FILE = "example_data/swagger_v2.yaml"
 TAVERN_FILE_DIR = "example_data/functional"
 TAVERN_FILES = []
 TAVERN_REGEX = "test_.*.tavern.yaml"
-API_TARGET_URLS = []#["{hsm_base_url}"]  # use this to specify variables you care about!
+API_TARGET_URLS = []  # ["{hsm_base_url}"]  # use this to specify variables you care about!
 
 
 def CreateJobSummaryTemplateValues(report):
@@ -45,7 +45,7 @@ def CreateJobSummaryTemplateValues(report):
     template_values["endpoints"] = []
 
     for row in report:
-        template_values["endpoints"].append({"url": row[0], "method": row[1], "count":row[2]})
+        template_values["endpoints"].append({"url": row[0], "method": row[1], "count": row[2]})
     template_values["endpoints"].sort(key=lambda e: (e["url"], e["method"]))
 
     return template_values
@@ -63,7 +63,6 @@ if __name__ == '__main__':
     ####################
     log_level = logging.INFO
     logging.basicConfig(level=log_level)
-
 
     if "OPEN_API_FILE" not in os.environ:
         logging.fatal("OPEN_API_FILE  is not set")
@@ -86,8 +85,6 @@ if __name__ == '__main__':
         RAW_API_TARGET_URLS = os.getenv("API_TARGET_URLS", None)
         API_TARGET_URLS = copy.deepcopy(RAW_API_TARGET_URLS.split(","))
         logging.info("API_TARGET_URLS: " + str(API_TARGET_URLS))
-
-
 
     SafeLoaderIgnoreUnknown.add_constructor(None, SafeLoaderIgnoreUnknown.ignore_unknown)
 
@@ -190,7 +187,7 @@ if __name__ == '__main__':
         final_endpoints[endpoint] = data
 
     # create a final report
-    #todo might want to group this by url, else use the final report
+    # todo might want to group this by url, else use the final report
 
     report = []
     for url, data in final_endpoints.items():
@@ -203,13 +200,12 @@ if __name__ == '__main__':
     #     for row in report:
     #         csv_out.writerow(row)
 
-
-    if os.path.exists("output") == False:
-        os.makedirs("output")
+    if not os.path.exists("data/output"):
+        os.makedirs("data/output")
 
     logging.info("Generating job summary template values")
     template_values = CreateJobSummaryTemplateValues(report)
-    with open("output/job_summary_template_values.yaml", "w") as f:
+    with open("data/output/job_summary_template_values.yaml", "w") as f:
         yaml.dump(template_values, f)
 
     logging.info(json.dumps(final_endpoints, indent=2))

@@ -63,7 +63,7 @@ jobs:
         id: template
         uses: chuhlomin/render-template@v1.5
         with:
-          # It is expected the that the open-api-tavern-coverage.md.tpl is present in this repo. Does it need to be in all repos? probably
+          # TODO It is expected the that the open-api-tavern-coverage.md.tpl is present in this repo. Does it need to be in all repos? probably
           template: .github/open-api-tavern-coverage.md.tpl
           vars_path: ./output/job_summary_template_values.yaml
 

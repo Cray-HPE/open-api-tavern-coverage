@@ -24,6 +24,10 @@ You will need:
 
 * the location of you swagger.yaml or openapi.yaml file
 * the location of your tavern files, MUST be named `test_*.tavern.yaml`
+* the names of the variable paths in the tavern files that represent the API url
+  * e.g. for the hms-smd tavern tests the primary url that is listed in every single test that we care about for coverage is `{hsm_base_url}`
+  * i.e. it is quite possible that there may be test stages that make calls to separate APIs not under test.
+    * e.g. in hms-firmware-action the tavern tests call HSM before making calls to FAS.  In that case we use the `{fas_base_url}`, and do not include `{hsm_base_url}`
 * the `run_open-api-tavern-coverage.yaml` file into your `.github/workflows` directory
 * the `open-api-tavern-coverage.yaml` into your `.github` directory
 

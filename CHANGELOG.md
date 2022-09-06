@@ -24,6 +24,14 @@ Removed - for now removed features
 Security - in case of vulnerabilities
 -->
 
+
+## [1.0.0] - 2022-09-02
+
+### Added
+
+- documentation
+- cleaned up template
+
 ## [0.1.0] - 2022-09-02
 
 ### Added

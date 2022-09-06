@@ -33,13 +33,7 @@ RUN set -ex \
         python3 \
         bash \
         py3-pip
-#    python3-dev \
-#        libffi-dev \
-#        \
-#        bash \
-#        tar \
-#        build-base \
-#        git
+
 
 
 COPY requirements.txt .

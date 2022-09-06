@@ -50,8 +50,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-
       - name: Run Open-API Tavern Coverage Tool
         shell: bash
         run: docker run -v "$(pwd):/src/app/data" -e TAVERN_FILE_DIR="data/${{ inputs.tavern-file-dir }}" -e OPEN_API_FILE="data/${{ inputs.open-api-file }}" -e API_TARGET_URLS=${{ inputs.api-target-urls }} artifactory.algol60.net/csm-docker/stable/open-api-tavern-coverage:1.0.0
@@ -63,6 +61,5 @@ jobs:
           # TODO It is expected the that the open-api-tavern-coverage.md.tpl is present in this repo. Does it need to be in all repos? probably
           template: .github/open-api-tavern-coverage.md.tpl
           vars_path: ./output/job_summary_template_values.yaml
-
       - name: Job Summary
         run: echo '${{ steps.template.outputs.result }}' >> $GITHUB_STEP_SUMMARY

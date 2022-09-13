@@ -99,7 +99,7 @@ if __name__ == '__main__':
         for file in files:
             file_path = os.path.join(root, file)
             if os.path.isfile(file_path):
-                if regex.search(root, file) is not None:
+                if regex.search(TAVERN_REGEX, file) is not None:
 
                     with open(file_path) as stream:
                         # Im not using safe load, because I have a custom constructor to turn all unknown tags into Nones

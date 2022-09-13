@@ -95,26 +95,28 @@ if __name__ == '__main__':
         logging.error(TAVERN_FILE_DIR, " not found")
         sys.exit(1)
 
-    for file in os.listdir(TAVERN_FILE_DIR):
-        file_path = os.path.join(TAVERN_FILE_DIR, file)
-        if os.path.isfile(file_path):
-            if regex.search(TAVERN_REGEX, file) is not None:
+    for root, dirs, files in os.walk(TAVERN_FILE_DIR):
+        for file in files:
+            file_path = os.path.join(root, file)
+            if os.path.isfile(file_path):
+                if regex.search(root, file) is not None:
 
-                with open(file_path) as stream:
-                    # Im not using safe load, because I have a custom constructor to turn all unknown tags into Nones
-                    tavern_docs = yaml.load_all(stream, Loader=SafeLoaderIgnoreUnknown)
-                    for doc in tavern_docs:
-                        test = doc["test_name"]
+                    with open(file_path) as stream:
+                        # Im not using safe load, because I have a custom constructor to turn all unknown tags into Nones
+                        tavern_docs = yaml.load_all(stream, Loader=SafeLoaderIgnoreUnknown)
+                        for doc in tavern_docs:
+                            test = doc["test_name"]
 
-                        for stage in doc["stages"]:
-                            test_data = {}
-                            test_data["file"] = file
-                            test_data["test_name"] = test
-                            test_stage = test + " - " + stage["name"]
-                            test_data["stage"] = stage["name"]
-                            test_data["request_url"] = stage["request"]["url"]
-                            test_data["request_method"] = stage["request"]["method"].upper()
-                            test_cases.append(test_data)
+                            for stage in doc["stages"]:
+                                test_data = {}
+                                test_data["file"] = file
+                                test_data["test_name"] = test
+                                test_stage = test + " - " + stage["name"]
+                                test_data["stage"] = stage["name"]
+                                test_data["request_url"] = stage["request"]["url"]
+                                test_data["request_method"] = stage["request"]["method"].upper()
+                                test_cases.append(test_data)
+
 
     # parse the swagger doc
     api_methods = []

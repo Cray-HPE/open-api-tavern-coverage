@@ -24,6 +24,11 @@ Removed - for now removed features
 Security - in case of vulnerabilities
 -->
 
+## [1.1.0] - 2022-09-13
+
+### changed
+
+- updated listdir to use walk so that TAVERN_DIR can be a recursive directory
 
 ## [1.0.0] - 2022-09-02
 

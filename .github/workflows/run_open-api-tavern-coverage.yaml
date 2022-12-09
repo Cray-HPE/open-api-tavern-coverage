@@ -40,6 +40,56 @@ on:
         description: comma separated list of urls to consider when parsing tavern files
         type: string
         required: true
+
+      open-api-tavern-coverage-image:
+        description: Open API Tavern coverage docker image to use.
+        type: string
+        required: false
+        default: artifactory.algol60.net/csm-docker/stable/open-api-tavern-coverage:1.1.0
+
+      job-summary-template:
+        description: Job summary template
+        type: string
+        required: false
+        default: |
+          <!-- This file is templated with https://pkg.go.dev/html/template -->
+
+          # Open-API Tavern Coverage Report
+          <table>
+            <tbody>
+              <tr>
+                <td>Endpoint</td>
+                <td>Method</td>
+                <td>Test Case Count</td>
+                <td>Status</td>
+              </tr>
+          {{- range $endpoint := .endpoints }}
+              <tr>
+                  <td>{{$endpoint.url}}</td>
+                  <td>{{$endpoint.method}}</td>
+                  <td>{{$endpoint.count}}</td>
+                  {{- if eq $endpoint.count 0 }}
+                <td>:x:</td>
+                  {{- end}}
+                  {{- if eq $endpoint.count 1 }}
+                <td>:warning:</td>
+                  {{- end}}
+                  {{- if gt $endpoint.count 1 }}
+                <td>:white_check_mark:</td>
+                  {{- end}}
+              </tr>
+          {{- end}}
+            </tbody>
+          </table>
+
+    secrets:
+      ARTIFACTORY_ALGOL60_READONLY_USERNAME:
+        description: Artifactory readonly username used for docker pulls
+        required: true
+      ARTIFACTORY_ALGOL60_READONLY_TOKEN:
+        description: Artifactory token for the given user
+        required: true
+
 jobs:
   run_coverage:
 
@@ -47,19 +97,36 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Login to algol60 Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: artifactory.algol60.net
+          username: ${{ secrets.ARTIFACTORY_ALGOL60_READONLY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_ALGOL60_READONLY_TOKEN }}
+
       - name: Run Open-API Tavern Coverage Tool
         shell: bash
-        run: docker run -v "$(pwd):/src/app/data" -e TAVERN_FILE_DIR="data/${{ inputs.tavern-file-dir }}" -e OPEN_API_FILE="data/${{ inputs.open-api-file }}" -e API_TARGET_URLS=${{ inputs.api-target-urls }} artifactory.algol60.net/csm-docker/stable/open-api-tavern-coverage:1.1.0
+        run: docker run -v "$(pwd):/src/app/data" -e TAVERN_FILE_DIR="data/${{ inputs.tavern-file-dir }}" -e OPEN_API_FILE="data/${{ inputs.open-api-file }}" -e API_TARGET_URLS=${{ inputs.api-target-urls }} "${{ inputs.open-api-tavern-coverage-image }}"
 
-      - name: Render template
+      - name: Job summary prep
+        shell: bash
+        env:
+          JOB_SUMMARY_TEMPLATE: ${{ inputs.job-summary-template }}
+        run: |
+          # Write out the job summary template to a file
+          mkdir -p temp
+          printenv JOB_SUMMARY_TEMPLATE > ./temp/job_summary_template.md.tpl
+
+      - name: Render job summary
         id: template
-        uses: chuhlomin/render-template@v1.5
+        uses: chuhlomin/render-template@v1.6
         with:
-          # TODO It is expected the that the open-api-tavern-coverage.md.tpl is present in this repo. Does it need to be in all repos? probably
-          template: .github/open-api-tavern-coverage.md.tpl
+          template: ./temp/job_summary_template.md.tpl
           vars_path: ./output/job_summary_template_values.yaml
-      - name: Job Summary
+      
+      - name: Set job summary
         run: echo '${{ steps.template.outputs.result }}' >> $GITHUB_STEP_SUMMARY

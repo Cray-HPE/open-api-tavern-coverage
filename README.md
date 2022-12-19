@@ -48,6 +48,7 @@ jobs:
       open-api-file: "api/docs/swagger.yaml"
       tavern-file-dir: "test/ct/functional"
       api-target-urls: "{fas_base_url}"
+    secrets: inherit
 
 ```
 

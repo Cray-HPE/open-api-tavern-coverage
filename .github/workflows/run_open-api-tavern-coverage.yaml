@@ -45,7 +45,7 @@ on:
         description: Open API Tavern coverage docker image to use.
         type: string
         required: false
-        default: artifactory.algol60.net/csm-docker/stable/open-api-tavern-coverage:1.1.0
+        default: artifactory.algol60.net/csm-docker/stable/open-api-tavern-coverage:2.0.0
 
       job-summary-template:
         description: Job summary template
